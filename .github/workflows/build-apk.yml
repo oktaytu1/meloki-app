@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
 jobs:
   build:
     name: APK'yı Derle ve İndirme Bağlantısı Üret
@@ -26,22 +30,13 @@ jobs:
       - name: Gradlew Yetkisi Ver ve SDK Ayarla
         run: |
           chmod +x android/gradlew
-          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          echo "sdk.dir=/usr/local/lib/android/sdk" > android/local.properties
 
       - name: APK Derle (assembleDebug)
         working-directory: android
-        run: |
-          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build_log.txt
-
-      - name: Build Logunu Artifact Olarak Sakla
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Build-Logs
-          path: android/build_log.txt
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: APK Dosyasını Yükle (Artifacts)
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Meloki-Debug-APK
@@ -50,7 +45,7 @@ jobs:
 
       - name: Doğrudan İndirme Release'i Oluştur
         uses: softprops/action-gh-release@v2
-        if: success() && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           tag_name: latest
           name: "Meloki Son APK (Doğrudan İndir)"
