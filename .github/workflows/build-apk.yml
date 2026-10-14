@@ -33,8 +33,10 @@ jobs:
           echo "sdk.dir=/usr/local/lib/android/sdk" > android/local.properties
 
       - name: APK Derle (assembleDebug)
+        id: assemble
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        run: |
+          ./gradlew assembleDebug --no-daemon --stacktrace > ../build_log.txt 2>&1 || (echo "### ❌ DERLEME HATASI:" >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && tail -n 80 ../build_log.txt >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && cat ../build_log.txt | tail -n 50 && exit 1)
 
       - name: APK Dosyasını Yükle (Artifacts)
         uses: actions/upload-artifact@v4
