@@ -1,11 +1,10 @@
 package com.meloki.app.model
 
-import com.google.firebase.firestore.ServerTimestamp
 import java.util.Date
 
 /**
  * Meloki Cozy Farm & Room Ortak Bulut Modeli
- * Asenkron kalıcı depolama: Sevgilinin telefonu kapalıyken bile tüm eylemler Firestore'a kaydedilir.
+ * Asenkron kalıcı depolama: Sevgilinin telefonu kapalıyken bile tüm eylemler kaydedilir.
  * Telefon açıldığında veya widget uyandığında zaman damgalarına (timestamp) göre büyüme hesaplanır.
  */
 data class RoomState(
@@ -40,7 +39,7 @@ data class RoomState(
     val petMood: String = "Mırıldıyor 💖",
     val petPettedToday: Int = 4,
 
-    @ServerTimestamp val lastUpdated: Date? = null
+    val lastUpdated: Date? = null
 )
 
 data class CropPlot(

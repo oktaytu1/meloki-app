@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: APK'yı Derle ve İndirme Bağlantısı Üret
@@ -25,12 +28,9 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Android SDK Kur
-        uses: android-actions/setup-android@v3
-
       - name: APK Derle (assembleDebug)
+        working-directory: android
         run: |
-          cd android
           gradle assembleDebug --no-daemon --stacktrace
 
       - name: APK Dosyasını Yükle (Artifacts)

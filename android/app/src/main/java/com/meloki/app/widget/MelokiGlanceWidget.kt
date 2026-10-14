@@ -97,7 +97,7 @@ class MelokiGlanceWidget : GlanceAppWidget() {
                     )
                 }
 
-                Spacer(modifier = GlanceModifier.defaultWeight())
+                Spacer(modifier = GlanceModifier.width(16.dp))
 
                 // Polaroid Fotoğraf Çerçevesi
                 Column(
