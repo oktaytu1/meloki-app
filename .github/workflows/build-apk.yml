@@ -33,12 +33,22 @@ jobs:
           echo "sdk.dir=/usr/local/lib/android/sdk" > android/local.properties
 
       - name: APK Derle (assembleDebug)
-        id: assemble
         working-directory: android
         run: |
-          ./gradlew assembleDebug --no-daemon --stacktrace > ../build_log.txt 2>&1 || (echo "### ❌ DERLEME HATASI:" >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && tail -n 80 ../build_log.txt >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && cat ../build_log.txt | tail -n 50 && exit 1)
+          ./gradlew assembleDebug --no-daemon --stacktrace > ../build_log.txt 2>&1 || (cat ../build_log.txt | tail -n 80 && exit 1)
+
+      - name: Hata Logunu Otomatik Dala Gönder
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B build-log
+          git add build_log.txt || true
+          git commit -m "Automatic build log" || true
+          git push -f origin build-log || true
 
       - name: APK Dosyasını Yükle (Artifacts)
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Meloki-Debug-APK
@@ -47,7 +57,7 @@ jobs:
 
       - name: Doğrudan İndirme Release'i Oluştur
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: success() && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         with:
           tag_name: latest
           name: "Meloki Son APK (Doğrudan İndir)"
