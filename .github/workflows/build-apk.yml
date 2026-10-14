@@ -1,0 +1,52 @@
+name: Meloki APK Bulut Derleyici
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: APK'yı Derle ve İndirme Bağlantısı Üret
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu Getir
+        uses: actions/checkout@v4
+
+      - name: Java 17 Kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle Kur ve Yapılandır
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+
+      - name: Android SDK Kur
+        uses: android-actions/setup-android@v3
+
+      - name: APK Derle (assembleDebug)
+        run: |
+          cd android
+          gradle assembleDebug --no-daemon --stacktrace
+
+      - name: APK Dosyasını Yükle (Artifacts)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Meloki-Debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+
+      - name: Doğrudan İndirme Release'i Oluştur
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: latest
+          name: "Meloki Son APK (Doğrudan İndir)"
+          body: "Sevgilinizle oynamak için indirin ve telefonunuza kurun! Saydam widget, balıkçılık ve yürüyen kedi aktiftir."
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

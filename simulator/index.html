@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meloki - Canlı Kedi, Balıkçılık & Saydam Widget</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff6b8b;
+      --gold: #fcc419;
+      --blue: #339af0;
+      --bg: #14121e;
+      --font: 'Fredoka', cursive, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 10%, #281d3b 0%, #0d0a17 100%);
+      color: #f1f3f5;
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffd43b;
+      text-shadow: 0 2px 10px rgba(255, 212, 59, 0.4);
+    }
+
+    header p {
+      color: #adb5bd;
+      font-size: 13px;
+    }
+
+    /* Top Stats */
+    .top-stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .stat-badge.gold { color: #ffe066; }
+    .stat-badge.pink { color: #ff8787; }
+    .stat-badge.blue { color: #74c0fc; }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+      z-index: 10;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, #ff8787 0%, #fa5252 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 0 #c92a2a, 0 6px 10px rgba(0,0,0,0.3);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s ease;
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #c92a2a;
+    }
+
+    .btn-gold {
+      background: linear-gradient(180deg, #ffd43b 0%, #fab005 100%);
+      color: #3b2000;
+      box-shadow: 0 4px 0 #d9480f;
+    }
+    .btn-gold:active { box-shadow: 0 1px 0 #d9480f; }
+
+    .btn-blue {
+      background: linear-gradient(180deg, #4dabf7 0%, #228be6 100%);
+      box-shadow: 0 4px 0 #1864ab;
+    }
+    .btn-blue:active { box-shadow: 0 1px 0 #1864ab; }
+
+    .btn-green {
+      background: linear-gradient(180deg, #69db7c 0%, #37b24d 100%);
+      box-shadow: 0 4px 0 #237032;
+    }
+    .btn-green:active { box-shadow: 0 1px 0 #237032; }
+
+    .btn-purple {
+      background: linear-gradient(180deg, #da77f2 0%, #be4bdb 100%);
+      box-shadow: 0 4px 0 #862e9c;
+    }
+    .btn-purple:active { box-shadow: 0 1px 0 #862e9c; }
+
+    /* Dual Phones Container */
+    .devices-stage {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .device-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .device-tag {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Phone Mockup */
+    .phone-mockup {
+      width: 350px;
+      height: 700px;
+      border-radius: 46px;
+      border: 11px solid #1f1b2b;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background-size: cover !important;
+      background-position: center !important;
+      transition: background 0.4s ease;
+    }
+
+    .phone-topbar {
+      height: 34px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+
+    .phone-camera {
+      width: 10px;
+      height: 10px;
+      background: #000;
+      border-radius: 50%;
+    }
+
+    .homescreen-apps {
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 14px;
+      z-index: 2;
+    }
+
+    .app-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .app-icon .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .app-icon span {
+      font-size: 10px;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+      font-weight: 600;
+    }
+
+    /* ========================================================
+       %100 SAYDAM WIDGET ALANI
+       ======================================================== */
+    .meloki-widget {
+      margin: 8px 12px;
+      height: 360px;
+      position: relative;
+      background: transparent !important; /* TAM SAYDAM */
+      border: 1px dashed rgba(255, 255, 255, 0.35);
+      border-radius: 28px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .meloki-widget.borderless {
+      border-color: transparent !important;
+    }
+
+    .widget-tag {
+      position: absolute;
+      top: -10px;
+      left: 18px;
+      background: #ff6b8b;
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .widget-yard {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* 1. SAYDAM ARKA PLANLI FOTOĞRAF ÇERÇEVESİ (BEYAZ KART YOK!) */
+    .photo-transparent-frame {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 86px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s ease;
+      z-index: 15;
+    }
+
+    .photo-transparent-frame:hover {
+      transform: scale(1.08) rotate(-2deg);
+    }
+
+    .photo-circle-cutout {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px; /* Çok şık oval köşeli kesim */
+      border: 3px solid rgba(255, 255, 255, 0.85); /* İnce, zarif şeffaf cam çerçeve */
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      background: transparent; /* Arkası tamamen saydam! */
+    }
+
+    .photo-circle-cutout img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-caption-pill {
+      margin-top: 4px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #ffe066;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      backdrop-filter: blur(4px);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+      max-width: 84px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 2. AŞK NOTU ŞEFFAF TABELASI */
+    .note-glass-sign {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      padding: 6px 10px;
+      max-width: 135px;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      z-index: 15;
+    }
+
+    .note-title {
+      font-size: 8px;
+      color: #ff9ebb;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .note-content {
+      font-size: 11px;
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 3. GERÇEK OYUN MEKANİĞİ: BALIK TUTMA GÖLETİ (MINI-GAME) */
+    .fishing-pond {
+      position: absolute;
+      bottom: 60px;
+      left: 15px;
+      width: 110px;
+      height: 80px;
+      background: radial-gradient(ellipse at center, rgba(34, 139, 230, 0.75) 0%, rgba(24, 100, 171, 0.5) 75%, transparent 100%);
+      border: 2px dashed rgba(116, 192, 252, 0.6);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(51, 154, 240, 0.4);
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .fishing-pond:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 25px rgba(51, 154, 240, 0.8);
+    }
+
+    .pond-ripple {
+      position: absolute;
+      width: 60px;
+      height: 40px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      animation: ripple 2s infinite ease-out;
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(0.4); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    .pond-icon {
+      font-size: 26px;
+      z-index: 2;
+      animation: bobbing 1.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes bobbing {
+      0% { transform: translateY(-2px); }
+      100% { transform: translateY(4px); }
+    }
+
+    .pond-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #e7f5ff;
+      background: rgba(0,0,0,0.5);
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-top: 2px;
+      z-index: 2;
+    }
+
+    /* 4. CANLI HAREKET EDEN & YÜRÜYEN KEDİ SPRITE */
+    .walking-cat-entity {
+      position: absolute;
+      bottom: 60px;
+      left: 140px;
+      width: 60px;
+      height: 55px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: left 2.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.2s ease;
+      z-index: 20;
+    }
+
+    .walking-cat-entity.flip {
+      transform: scaleX(-1);
+    }
+
+    .cat-avatar-wrap {
+      font-size: 38px;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+
+    /* Patileri atan ve yürüyen animasyon */
+    .walking-cat-entity.walking .cat-avatar-wrap {
+      animation: catWalkSteps 0.35s infinite alternate ease-in-out;
+    }
+
+    @keyframes catWalkSteps {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-6px) rotate(6deg); }
+    }
+
+    .cat-status-balloon {
+      position: absolute;
+      top: -16px;
+      background: rgba(0, 0, 0, 0.65);
+      color: #ff8787;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 10px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
+
+    /* 5. YERLEŞTİRİLEN MOBİLYA / ODA KÖŞESİ */
+    .placed-furniture-item {
+      position: absolute;
+      bottom: 65px;
+      right: 25px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      transition: transform 0.2s ease;
+    }
+
+    .placed-furniture-item:hover {
+      transform: scale(1.1);
+    }
+
+    .furniture-emoji {
+      font-size: 38px;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
+    }
+
+    /* 6. WIDGET İÇİ ETKİLEŞİM DOCK */
+    .widget-action-dock {
+      margin-top: auto;
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      z-index: 25;
+    }
+
+    .dock-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .dock-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Phone Navigation Dock */
+    .phone-dock {
+      margin-top: auto;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      margin-left: 16px;
+      margin-right: 16px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* Floating Feedback */
+    .floating-fx {
+      position: absolute;
+      font-weight: 700;
+      font-size: 15px;
+      pointer-events: none;
+      animation: floatUp 1.2s forwards ease-out;
+      z-index: 50;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(0) scale(0.6); }
+      20% { opacity: 1; transform: translateY(-15px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-50px) scale(1); }
+    }
+
+    /* OTA (Over-The-Air) Remote Update Banner */
+    .ota-update-banner {
+      position: absolute;
+      top: 45px;
+      left: 14px;
+      right: 14px;
+      background: linear-gradient(135deg, #1c7ed6 0%, #1864ab 100%);
+      border: 2px solid #74c0fc;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      z-index: 60;
+      animation: dropDown 0.4s ease-out;
+    }
+
+    @keyframes dropDown {
+      0% { transform: translateY(-60px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .ota-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ota-desc {
+      font-size: 11px;
+      color: #d0ebff;
+      margin: 4px 0 8px 0;
+      line-height: 1.3;
+    }
+
+    .ota-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-ota-confirm {
+      flex: 1;
+      background: #40c057;
+      border: none;
+      color: white;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-ota-dismiss {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-family: var(--font);
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Bottom Info & Log */
+    .info-container {
+      max-width: 820px;
+      width: 100%;
+      background: rgba(28, 24, 46, 0.85);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 18px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 24px;
+    }
+
+    .info-container h3 {
+      font-size: 15px;
+      color: #ffd43b;
+      margin-bottom: 6px;
+    }
+
+    .info-container p {
+      color: #ced4da;
+      font-size: 13px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .log-stream {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #a9e34b;
+      max-height: 100px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-line span.time { color: #868e96; }
+    .log-line span.tag { color: #ff8787; font-weight: bold; }
+
+    /* Modals */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: #231c38;
+      border: 2px solid #ff9ebb;
+      border-radius: 22px;
+      padding: 20px;
+      width: 90%;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .modal-box h2 {
+      font-size: 17px;
+      color: #ffd43b;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .modal-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .modal-card:hover {
+      background: rgba(255, 212, 59, 0.15);
+      border-color: #ffd43b;
+      transform: translateY(-2px);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px; right: 14px;
+      background: transparent;
+      border: none;
+      color: #adb5bd;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐱 MELOKI: CANLI KEDİ & BALIKÇILIK 🎣</h1>
+    <p>Saydam Widget • Yürüyen Kedi • Balık Tutma Mini Oyunu • OTA Uzaktan Otomatik Güncelleme</p>
+  </header>
+
+  <!-- Ortak Kasa -->
+  <div class="top-stats-bar">
+    <div class="stat-badge gold">🪙 <span id="valCoins">150</span> Altın</div>
+    <div class="stat-badge pink">💖 <span id="valHearts">95</span> Sevgi</div>
+    <div class="stat-badge blue">🐟 <span id="valFish">3</span> Balık</div>
+  </div>
+
+  <!-- Üst Aksiyon Butonları -->
+  <div class="action-bar">
+    <button class="btn btn-purple" id="btnTriggerCatWalk">🐾 Kediyi Yürüt / Keşfe Çıkar</button>
+    <button class="btn btn-blue" id="btnFish">🎣 Olta At (Balık Tut)</button>
+    <button class="btn btn-gold" id="btnOpenShop">🛋️ Mobilya Mağazası</button>
+    <button class="btn btn-green" id="btnSimulateOTA">🚀 Yeni Uzaktan Güncelleme Gönder (OTA)</button>
+    <button class="btn" id="btnChangeWallpaper">🖼️ Duvar Kağıdını Değiştir</button>
+  </div>
+
+  <!-- Yan Yana İki Cihaz -->
+  <div class="devices-stage">
+
+    <!-- SENİN TELEFONUN -->
+    <div class="device-column">
+      <div class="device-tag">📱 SENİN TELEFONUN</div>
+
+      <div class="phone-mockup" id="phone1" style="background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80')">
+        <!-- OTA Güncelleme Bildirimi -->
+        <div class="ota-update-banner hidden" id="otaBanner1">
+          <div class="ota-title">🚀 Yeni Güncelleme Geldi! (v1.2.0)</div>
+          <div class="ota-desc">Yürüyen kedi ve balıkçılık mini oyunu eklendi. Tek dokunuşla hemen yükle!</div>
+          <div class="ota-btn-row">
+            <button class="btn-ota-confirm" onclick="applyOTA(1)">Şimdi Yükle ve Başlat ✨</button>
+            <button class="btn-ota-dismiss" onclick="dismissOTA(1)">Daha Sonra</button>
+          </div>
+        </div>
+
+        <div class="phone-topbar">
+          <span>16:45</span>
+          <div class="phone-camera"></div>
+          <span>📶 5G 🔋 94%</span>
+        </div>
+
+        <div class="homescreen-apps">
+          <div class="app-icon"><div class="icon-box">💬</div><span>WhatsApp</span></div>
+          <div class="app-icon"><div class="icon-box">🎵</div><span>Spotify</span></div>
+          <div class="app-icon"><div class="icon-box">📸</div><span>Instagram</span></div>
+          <div class="app-icon"><div class="icon-box">🗺️</div><span>Harita</span></div>
+        </div>
+
+        <!-- ================= %100 SAYDAM WIDGET ================= -->
+        <div class="meloki-widget" id="widget1">
+          <div class="widget-tag">MELOKI SAYDAM ODA</div>
+
+          <div class="widget-yard" id="yard1">
+            <!-- 1. AŞK NOTU TABELASI (Şeffaf cam tasarım) -->
+            <div class="note-glass-sign" id="noteSign1" title="Sevgiline not yazmak için tıkla">
+              <div class="note-title">💌 Aşk Notu</div>
+              <div class="note-content" id="noteText1">Akşam birlikte balık pişirelim! 💕</div>
+            </div>
+
+            <!-- 2. SAYDAM ARKA PLANLI FOTOĞRAF ÇERÇEVESİ (BEYAZ KART YOK!) -->
+            <div class="photo-transparent-frame" id="photoFrame1" title="Fotoğraf değiştirmek için dokun!">
+              <div class="photo-circle-cutout">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=300&q=80" alt="Anı" id="photoImg1">
+              </div>
+              <div class="photo-caption-pill" id="photoCaption1">Bizim Anımız ✨</div>
+            </div>
+
+            <!-- 3. BALIK TUTMA GÖLETİ (Gerçek Mini Oyun) -->
+            <div class="fishing-pond" id="pond1" title="Olta atmak için dokun!">
+              <div class="pond-ripple"></div>
+              <div class="pond-icon">🎣</div>
+              <div class="pond-label">Balık Tut</div>
+            </div>
+
+            <!-- 4. CANLI YÜRÜYEN & HAREKET EDEN KEDİ -->
+            <div class="walking-cat-entity" id="cat1" title="Sevmek için dokun!">
+              <div class="cat-status-balloon" id="catMood1">Mırr~ 💕</div>
+              <div class="cat-avatar-wrap">🐱</div>
+            </div>
+
+            <!-- 5. YERLEŞTİRİLEN MOBİLYA -->
+            <div class="placed-furniture-item" id="furniture1" title="Mobilya">
+              <div class="furniture-emoji" id="furnEmoji1">🛋️</div>
+            </div>
+
+            <!-- 6. WIDGET İÇİ HIZLI AKSİYON DOCK -->
+            <div class="widget-action-dock">
+              <button class="dock-btn" id="btnDockFish1">🎣 Olta At</button>
+              <button class="dock-btn" id="btnDockFeedCat1">🐟 Kediyi Besle</button>
+              <button class="dock-btn" id="btnDockWriteNote1">✏️ Not Yaz</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="homescreen-apps">
+          <div class="app-icon"><div class="icon-box">📁</div><span>Dosyalar</span></div>
+          <div class="app-icon"><div class="icon-box">📅</div><span>Takvim</span></div>
+          <div class="app-icon"><div class="icon-box">⚙️</div><span>Ayarlar</span></div>
+          <div class="app-icon"><div class="icon-box">⏰</div><span>Saat</span></div>
+        </div>
+
+        <div class="phone-dock">
+          <div class="app-icon"><div class="icon-box">📞</div></div>
+          <div class="app-icon"><div class="icon-box">🌐</div></div>
+          <div class="app-icon"><div class="icon-box">📧</div></div>
+          <div class="app-icon"><div class="icon-box">❤️</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEVGİLİNİN TELEFONU -->
+    <div class="device-column">
+      <div class="device-tag">💖 SEVGİLİNİN TELEFONU</div>
+
+      <div class="phone-mockup" id="phone2" style="background: url('https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=600&q=80')">
+        <!-- OTA Güncelleme Bildirimi -->
+        <div class="ota-update-banner hidden" id="otaBanner2">
+          <div class="ota-title">🚀 Yeni Güncelleme Geldi! (v1.2.0)</div>
+          <div class="ota-desc">Yürüyen kedi ve balıkçılık mini oyunu eklendi. Tek dokunuşla hemen yükle!</div>
+          <div class="ota-btn-row">
+            <button class="btn-ota-confirm" onclick="applyOTA(2)">Şimdi Yükle ve Başlat ✨</button>
+            <button class="btn-ota-dismiss" onclick="dismissOTA(2)">Daha Sonra</button>
+          </div>
+        </div>
+
+        <div class="phone-topbar">
+          <span>16:45</span>
+          <div class="phone-camera"></div>
+          <span>📶 5G 🔋 89%</span>
+        </div>
+
+        <div class="homescreen-apps">
+          <div class="app-icon"><div class="icon-box">💬</div><span>WhatsApp</span></div>
+          <div class="app-icon"><div class="icon-box">🎵</div><span>Spotify</span></div>
+          <div class="app-icon"><div class="icon-box">📸</div><span>Instagram</span></div>
+          <div class="app-icon"><div class="icon-box">🗺️</div><span>Harita</span></div>
+        </div>
+
+        <!-- ================= %100 SAYDAM WIDGET ================= -->
+        <div class="meloki-widget" id="widget2">
+          <div class="widget-tag">MELOKI SAYDAM ODA</div>
+
+          <div class="widget-yard" id="yard2">
+            <div class="note-glass-sign" id="noteSign2" title="Sevgiline not yazmak için tıkla">
+              <div class="note-title">💌 Aşk Notu</div>
+              <div class="note-content" id="noteText2">Akşam birlikte balık pişirelim! 💕</div>
+            </div>
+
+            <!-- SAYDAM ARKA PLANLI FOTOĞRAF -->
+            <div class="photo-transparent-frame" id="photoFrame2" title="Fotoğraf değiştirmek için dokun!">
+              <div class="photo-circle-cutout">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=300&q=80" alt="Anı" id="photoImg2">
+              </div>
+              <div class="photo-caption-pill" id="photoCaption2">Bizim Anımız ✨</div>
+            </div>
+
+            <!-- BALIK GÖLETİ -->
+            <div class="fishing-pond" id="pond2" title="Olta atmak için dokun!">
+              <div class="pond-ripple"></div>
+              <div class="pond-icon">🎣</div>
+              <div class="pond-label">Balık Tut</div>
+            </div>
+
+            <!-- CANLI YÜRÜYEN KEDİ -->
+            <div class="walking-cat-entity" id="cat2" title="Sevmek için dokun!">
+              <div class="cat-status-balloon" id="catMood2">Mırr~ 💕</div>
+              <div class="cat-avatar-wrap">🐱</div>
+            </div>
+
+            <!-- YERLEŞTİRİLEN MOBİLYA -->
+            <div class="placed-furniture-item" id="furniture2">
+              <div class="furniture-emoji" id="furnEmoji2">🛋️</div>
+            </div>
+
+            <div class="widget-action-dock">
+              <button class="dock-btn" id="btnDockFish2">🎣 Olta At</button>
+              <button class="dock-btn" id="btnDockFeedCat2">🐟 Kediyi Besle</button>
+              <button class="dock-btn" id="btnDockWriteNote2">✏️ Not Yaz</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="homescreen-apps">
+          <div class="app-icon"><div class="icon-box">📁</div><span>Dosyalar</span></div>
+          <div class="app-icon"><div class="icon-box">📅</div><span>Takvim</span></div>
+          <div class="app-icon"><div class="icon-box">⚙️</div><span>Ayarlar</span></div>
+          <div class="app-icon"><div class="icon-box">⏰</div><span>Saat</span></div>
+        </div>
+
+        <div class="phone-dock">
+          <div class="app-icon"><div class="icon-box">📞</div></div>
+          <div class="app-icon"><div class="icon-box">🌐</div></div>
+          <div class="app-icon"><div class="icon-box">📧</div></div>
+          <div class="app-icon"><div class="icon-box">❤️</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Açıklama & OTA Güncelleme Bilgisi -->
+  <div class="info-container">
+    <h3>🚀 Uzaktan Otomatik Güncelleme (OTA) ve Yenilikler Rehberi</h3>
+    <p>
+      • <strong>Saydam Fotoğraf Alanı:</strong> Arkasındaki beyaz karton kaldırıldı; seçtiğiniz fotoğraf telefonun duvar kağıdı üzerinde pürüzsüz saydam oval hatlarla oturur.<br>
+      • <strong>Yürüyen & Keşfe Çıkan Kedi:</strong> Kedi odada serbestçe patilerini atarak yürür, mobilyalara gider, keşfe çıkar ve sevgiline hediye taşır.<br>
+      • <strong>Balıkçılık Mini Oyunu:</strong> Gölete dokunduğunda oltayı atarsın. Farklı balıklar ve gizemli hazineler yakalar, kediye yedirir veya altına çevirirsin.<br>
+      • <strong>OTA (Over-The-Air) Uzaktan Güncelleme:</strong> Uygulamayı telefona bir kez kurduktan sonra yeni özellikler eklediğimizde <em>Play Store'a veya yeniden APK kurmaya gerek kalmadan</em> ekrana "Yeni Güncelleme Geldi" onayı çıkar ve tek dokunuşla kendini günceller!
+    </p>
+    <div class="log-stream" id="logStream">
+      <div class="log-line"><span class="time">[16:45:00]</span> <span class="tag">MELOKI v1.2:</span> Yürüyen kedi ve balıkçılık mini oyunu devrede.</div>
+    </div>
+  </div>
+
+  <!-- MOBİLYA MODAL -->
+  <div class="modal-backdrop" id="shopModal">
+    <div class="modal-box">
+      <button class="modal-close" id="btnCloseShop">✕</button>
+      <h2>🛋️ Rahat Oda & Bahçe Mobilyaları</h2>
+      <div class="modal-grid">
+        <div class="modal-card" onclick="placeFurniture('🛋️', 'Rahat İkili Koltuk', 50)">
+          <span style="font-size:32px;">🛋️</span>
+          <span style="font-weight:700; font-size:12px; margin-top:4px;">İkili Koltuk</span>
+          <span style="font-size:11px; color:#ffe066;">🪙 50 Altın</span>
+        </div>
+        <div class="modal-card" onclick="placeFurniture('🪵', 'Şömine Ateşi', 60)">
+          <span style="font-size:32px;">🪵</span>
+          <span style="font-weight:700; font-size:12px; margin-top:4px;">Şömine Ateşi</span>
+          <span style="font-size:11px; color:#ffe066;">🪙 60 Altın</span>
+        </div>
+        <div class="modal-card" onclick="placeFurniture('🏮', 'Japon Feneri', 40)">
+          <span style="font-size:32px;">🏮</span>
+          <span style="font-weight:700; font-size:12px; margin-top:4px;">Japon Feneri</span>
+          <span style="font-size:11px; color:#ffe066;">🪙 40 Altın</span>
+        </div>
+        <div class="modal-card" onclick="placeFurniture('🧸', 'Dev Pelüş Ayı', 75)">
+          <span style="font-size:32px;">🧸</span>
+          <span style="font-weight:700; font-size:12px; margin-top:4px;">Pelüş Ayı</span>
+          <span style="font-size:11px; color:#ffe066;">🪙 75 Altın</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOT YAZMA MODAL -->
+  <div class="modal-backdrop" id="noteModal">
+    <div class="modal-box">
+      <button class="modal-close" id="btnCloseNote">✕</button>
+      <h2>💌 Saydam Tabelaya Aşk Notu Yaz</h2>
+      <input type="text" id="inputNote" maxlength="35" placeholder="Örn: Akşam birlikte balık pişirelim! 💕" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #ff9ebb; background: #14121e; color: white; font-family: var(--font); font-size: 14px; margin-bottom: 14px;">
+      <button class="btn btn-gold" style="width: 100%; justify-content: center;" id="btnSaveNote">Tabelaya As ✨</button>
+    </div>
+  </div>
+
+  <!-- GİZLİ FOTOĞRAF INPUT -->
+  <input type="file" id="filePhoto" accept="image/*" class="hidden">
+
+  <script>
+    // ==========================================
+    // AUDIO SYNTHESIZER
+    // ==========================================
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSfx(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+
+      if (type === 'splash') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'catch') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(554.37, now + 0.08);
+        osc.frequency.setValueAtTime(659.25, now + 0.16);
+        osc.frequency.setValueAtTime(880, now + 0.24);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } else if (type === 'purr') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.3);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'pop') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(350, now);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.08);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+    }
+
+    // ==========================================
+    // ORTAK STATE
+    // ==========================================
+    const roomState = {
+      coins: 150,
+      hearts: 95,
+      fishCount: 3,
+      loveNote: "Akşam birlikte balık pişirelim! 💕",
+      photoUrl: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=300&q=80",
+      photoCaption: "Bizim Anımız ✨",
+      currentFurniture: "🛋️",
+      catX: 140, // piksel pozisyonu
+      catIsFlipped: false,
+      catMood: "Mırr~ 💕"
+    };
+
+    const wallpapers = [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80"
+    ];
+    let wpIdx = 0;
+
+    function addLog(tag, msg) {
+      const stream = document.getElementById("logStream");
+      const time = new Date().toTimeString().split(' ')[0];
+      const line = document.createElement("div");
+      line.className = "log-line";
+      line.innerHTML = `<span class="time">[${time}]</span> <span class="tag">${tag}:</span> ${msg}`;
+      stream.prepend(line);
+    }
+
+    function showFx(yardId, text, x, y) {
+      const yard = document.getElementById(yardId);
+      const fx = document.createElement("div");
+      fx.className = "floating-fx";
+      fx.innerText = text;
+      fx.style.left = (x || 120) + "px";
+      fx.style.top = (y || 90) + "px";
+      yard.appendChild(fx);
+      setTimeout(() => fx.remove(), 1200);
+    }
+
+    function syncUI() {
+      document.getElementById("valCoins").innerText = roomState.coins;
+      document.getElementById("valHearts").innerText = roomState.hearts;
+      document.getElementById("valFish").innerText = roomState.fishCount;
+
+      [1, 2].forEach(d => {
+        document.getElementById(`noteText${d}`).innerText = roomState.loveNote;
+        document.getElementById(`photoImg${d}`).src = roomState.photoUrl;
+        document.getElementById(`photoCaption${d}`).innerText = roomState.photoCaption;
+        document.getElementById(`furnEmoji${d}`).innerText = roomState.currentFurniture;
+        document.getElementById(`catMood${d}`).innerText = roomState.catMood;
+
+        const catElem = document.getElementById(`cat${d}`);
+        catElem.style.left = roomState.catX + "px";
+        catElem.classList.toggle("flip", roomState.catIsFlipped);
+      });
+    }
+
+    // ==========================================
+    // 🐾 KEDİ YÜRÜME & HAREKET ALGORİTMASI
+    // ==========================================
+    function moveCat(customTargetX) {
+      // 30 ile 230 piksel arasında rastgele yürü
+      const targetX = customTargetX !== undefined ? customTargetX : Math.floor(30 + Math.random() * 200);
+      const isFlipped = targetX < roomState.catX;
+
+      roomState.catIsFlipped = isFlipped;
+      roomState.catX = targetX;
+
+      [1, 2].forEach(d => {
+        const cat = document.getElementById(`cat${d}`);
+        cat.classList.add("walking");
+        cat.classList.toggle("flip", isFlipped);
+        cat.style.left = targetX + "px";
+      });
+
+      playSfx('pop');
+      addLog("KEDİ HAREKET ETTİ", `Kedi patilerini atarak odada ${targetX}px konumuna yürüdü.`);
+
+      setTimeout(() => {
+        [1, 2].forEach(d => {
+          document.getElementById(`cat${d}`).classList.remove("walking");
+        });
+      }, 2500);
+    }
+
+    // Otomatik periyodik yürüme
+    setInterval(() => {
+      if (Math.random() > 0.4) {
+        moveCat();
+      }
+    }, 7000);
+
+    // Kediye tıklama
+    function petCat(senderDevice) {
+      playSfx('purr');
+      roomState.hearts += 5;
+      roomState.catMood = "Mırrr~ 💖";
+      syncUI();
+
+      showFx("yard1", "💖 +5 Sevgi!", roomState.catX, 50);
+      showFx("yard2", "💖 Seni Düşündü!", roomState.catX, 50);
+      addLog("KEDİ SEVİLDİ", `${senderDevice === 1 ? "Sen" : "Sevgilin"} kediyi sevdi. Mırlıyor!`);
+    }
+
+    // Kediyi balıkla besleme
+    function feedCat(senderDevice) {
+      if (roomState.fishCount > 0) {
+        playSfx('purr');
+        roomState.fishCount--;
+        roomState.hearts += 15;
+        roomState.catMood = "Çok Mutlu! 🐟✨";
+        syncUI();
+        showFx(`yard${senderDevice}`, "😋 Balığı Yedi! +15💖", roomState.catX, 50);
+        addLog("KEDİ BESLENDİ", "Tuttuğun taze balık kediye verildi! Kedi çok mutlu oldu.");
+      } else {
+        showFx(`yard${senderDevice}`, "🎣 Önce balık tutmalısın!", roomState.catX, 50);
+      }
+    }
+
+    // ==========================================
+    // 🎣 BALIK TUTMA MİNİ OYUNU
+    // ==========================================
+    const fishTreasures = [
+      { name: "Gümüş Alabalık", emoji: "🐟", coins: 20 },
+      { name: "Altın Sazan", emoji: "🐠", coins: 35 },
+      { name: "Nadir Aşk Denizyıldızı", emoji: "⭐", coins: 50 },
+      { name: "Batık Hazine Sandığı", emoji: "🪙", coins: 75 }
+    ];
+
+    function fishCatch(senderDevice) {
+      playSfx('splash');
+      showFx(`yard${senderDevice}`, "🎣 Olta atıldı...", 30, 80);
+
+      // 1.2 saniye sonra balık vursun!
+      setTimeout(() => {
+        playSfx('catch');
+        const reward = fishTreasures[Math.floor(Math.random() * fishTreasures.length)];
+        roomState.coins += reward.coins;
+        roomState.fishCount++;
+        syncUI();
+
+        showFx(`yard${senderDevice}`, `🎉 ${reward.emoji} ${reward.name}! (+${reward.coins}🪙)`, 20, 60);
+        addLog("BALIK YAKALANDI", `${reward.name} tutuldu! +${reward.coins} Altın ve 1 Balık eklendi.`);
+
+        // Kedi balığı görünce hemen göletin yanına yürüsün!
+        moveCat(70);
+      }, 1200);
+    }
+
+    // ==========================================
+    // 🛋️ MOBİLYA YERLEŞTİRME
+    // ==========================================
+    function placeFurniture(emoji, name, price) {
+      if (roomState.coins >= price) {
+        playSfx('pop');
+        roomState.coins -= price;
+        roomState.currentFurniture = emoji;
+        document.getElementById("shopModal").style.display = "none";
+        syncUI();
+        showFx("yard1", `✨ ${name} Yerleşti!`, 180, 80);
+        addLog("MOBİLYA YERLEŞTİ", `${name} (${emoji}) satın alındı ve saydam alana yerleşti!`);
+      } else {
+        alert("Yeterli altınınız yok! Gölette balık tutarak altın kazanın.");
+      }
+    }
+
+    // ==========================================
+    // 💌 AŞK NOTU & SAYDAM FOTOĞRAF
+    // ==========================================
+    function openNoteModal() {
+      document.getElementById("inputNote").value = roomState.loveNote;
+      document.getElementById("noteModal").style.display = "flex";
+    }
+
+    document.getElementById("btnSaveNote").addEventListener("click", () => {
+      const val = document.getElementById("inputNote").value.trim();
+      if (val) {
+        playSfx('pop');
+        roomState.loveNote = val;
+        document.getElementById("noteModal").style.display = "none";
+        syncUI();
+        showFx("yard1", "💌 Not Asıldı!", 30, 30);
+        addLog("AŞK NOTU", `Yeni not saydam tabelaya yazıldı: "${val}"`);
+      }
+    });
+
+    document.getElementById("photoFrame1").addEventListener("click", () => document.getElementById("filePhoto").click());
+    document.getElementById("photoFrame2").addEventListener("click", () => document.getElementById("filePhoto").click());
+
+    document.getElementById("filePhoto").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          playSfx('pop');
+          roomState.photoUrl = evt.target.result;
+          roomState.photoCaption = "Bizim Anımız 💕";
+          syncUI();
+          showFx("yard1", "📸 Fotoğraf Saydam Çerçevede!", 180, 30);
+          addLog("FOTOĞRAF YÜKLENDİ", "Galeriden seçilen fotoğraf saydam arka planıyla çerçeveye oturdu!");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // ==========================================
+    // 🚀 OTA (OVER-THE-AIR) GÜNCELLEME SİMÜLASYONU
+    // ==========================================
+    document.getElementById("btnSimulateOTA").addEventListener("click", () => {
+      playSfx('pop');
+      document.getElementById("otaBanner1").classList.remove("hidden");
+      document.getElementById("otaBanner2").classList.remove("hidden");
+      addLog("OTA BİLDİRİMİ", "Buluttan yeni sürüm bildirimi gönderildi: 'v1.2.0 Güncellemesi Mevcut'. Ekranda onay butonu belirdi!");
+    });
+
+    function applyOTA(deviceNum) {
+      playSfx('catch');
+      document.getElementById(`otaBanner${deviceNum}`).classList.add("hidden");
+      showFx(`yard${deviceNum}`, "⚡ Güncelleme Kuruldu!", 80, 100);
+      addLog("GÜNCELLEME TAMAMLANDI", `Cihaz ${deviceNum} yeni güncellemeyi doğrudan kurdu ve baştan başlatmadan çalışmaya devam etti.`);
+    }
+
+    function dismissOTA(deviceNum) {
+      document.getElementById(`otaBanner${deviceNum}`).classList.add("hidden");
+    }
+
+    // ==========================================
+    // ETKİLEŞİM DİNLEYİCİLERİ
+    // ==========================================
+    document.getElementById("cat1").addEventListener("click", () => petCat(1));
+    document.getElementById("cat2").addEventListener("click", () => petCat(2));
+
+    document.getElementById("pond1").addEventListener("click", () => fishCatch(1));
+    document.getElementById("pond2").addEventListener("click", () => fishCatch(2));
+    document.getElementById("btnFish").addEventListener("click", () => fishCatch(1));
+
+    document.getElementById("btnTriggerCatWalk").addEventListener("click", () => moveCat());
+
+    document.getElementById("btnDockFish1").addEventListener("click", () => fishCatch(1));
+    document.getElementById("btnDockFish2").addEventListener("click", () => fishCatch(2));
+
+    document.getElementById("btnDockFeedCat1").addEventListener("click", () => feedCat(1));
+    document.getElementById("btnDockFeedCat2").addEventListener("click", () => feedCat(2));
+
+    document.getElementById("btnDockWriteNote1").addEventListener("click", openNoteModal);
+    document.getElementById("btnDockWriteNote2").addEventListener("click", openNoteModal);
+    document.getElementById("noteSign1").addEventListener("click", openNoteModal);
+    document.getElementById("noteSign2").addEventListener("click", openNoteModal);
+
+    document.getElementById("btnOpenShop").addEventListener("click", () => document.getElementById("shopModal").style.display = "flex");
+    document.getElementById("btnCloseShop").addEventListener("click", () => document.getElementById("shopModal").style.display = "none");
+    document.getElementById("btnCloseNote").addEventListener("click", () => document.getElementById("noteModal").style.display = "none");
+
+    document.getElementById("btnChangeWallpaper").addEventListener("click", () => {
+      wpIdx = (wpIdx + 1) % wallpapers.length;
+      document.getElementById("phone1").style.background = `url('${wallpapers[wpIdx]}')`;
+      document.getElementById("phone2").style.background = `url('${wallpapers[(wpIdx + 1) % wallpapers.length]}')`;
+      addLog("DUVAR KAĞIDI DEĞİŞTİ", "Saydam widget'ın ve fotoğrafın duvar kağıdıyla nasıl bütünleştiğini görün.");
+    });
+
+    // İlk Yükleme
+    syncUI();
+  </script>
+</body>
+</html>
