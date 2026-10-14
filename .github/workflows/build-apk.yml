@@ -23,12 +23,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Gradlew Yetkisi Ver
-        run: chmod +x android/gradlew
+      - name: Gradlew Yetkisi Ver ve SDK Ayarla
+        run: |
+          chmod +x android/gradlew
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
       - name: APK Derle (assembleDebug)
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon --no-build-cache --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: APK Dosyasını Yükle (Artifacts)
         uses: actions/upload-artifact@v4
