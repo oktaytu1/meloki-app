@@ -149,17 +149,20 @@ class MelokiGlanceWidget : GlanceAppWidget() {
                     // Tarla Parselleri & Kedi & Mobilya Sırası
                     Row(
                         modifier = GlanceModifier.fillMaxWidth().padding(bottom = 6.dp),
-                        horizontalAlignment = Alignment.SpaceAround,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalAlignment = Alignment.Bottom
                     ) {
                         // Parsel 1
                         CropPlotWidget(room.plots.getOrNull(0), 0)
+                        Spacer(modifier = GlanceModifier.width(6.dp))
 
                         // Parsel 2
                         CropPlotWidget(room.plots.getOrNull(1), 1)
+                        Spacer(modifier = GlanceModifier.width(6.dp))
 
                         // Parsel 3
                         CropPlotWidget(room.plots.getOrNull(2), 2)
+                        Spacer(modifier = GlanceModifier.width(8.dp))
 
                         // Kedi
                         Column(
@@ -191,7 +194,7 @@ class MelokiGlanceWidget : GlanceAppWidget() {
                             .background(ColorProvider(Color(0x99000000)))
                             .cornerRadius(12.dp)
                             .padding(4.dp),
-                        horizontalAlignment = Alignment.SpaceAround,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
@@ -202,6 +205,7 @@ class MelokiGlanceWidget : GlanceAppWidget() {
                                 fontWeight = FontWeight.Bold
                             )
                         )
+                        Spacer(modifier = GlanceModifier.width(16.dp))
                         Text(
                             text = "💖 ${room.hearts}",
                             style = TextStyle(
@@ -210,6 +214,7 @@ class MelokiGlanceWidget : GlanceAppWidget() {
                                 fontWeight = FontWeight.Bold
                             )
                         )
+                        Spacer(modifier = GlanceModifier.width(16.dp))
                         Box(
                             modifier = GlanceModifier
                                 .clickable(actionRunCallback<WaterAllWidgetCallback>())
